@@ -1,0 +1,251 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  ADMIN
+  HOD
+  TEACHER
+}
+
+enum Status {
+  ACTIVE
+  INACTIVE
+}
+
+enum ClassName {
+  FOUNDATION_1
+  FOUNDATION_2
+  RECEPTION_1
+  RECEPTION_2
+}
+
+enum AttendanceStatus {
+  PRESENT
+  ABSENT
+  LATE
+}
+
+enum Mood {
+  HAPPY
+  QUIET
+  UPSET
+  TIRED
+}
+
+enum ParticipationLevel {
+  EXCELLENT
+  GOOD
+  FAIR
+  NEEDS_SUPPORT
+}
+
+enum ReportStatus {
+  DRAFT
+  SUBMITTED_TO_HOD
+  RETURNED_BY_HOD
+  APPROVED_BY_HOD
+  SUBMITTED_TO_ADMIN
+  ARCHIVED
+}
+
+enum ReviewStatus {
+  APPROVED
+  REJECTED
+}
+
+enum FinalStatus {
+  ACCEPTED
+  FLAGGED
+  ARCHIVED
+}
+
+model User {
+  id            String    @id @default(uuid())
+  firstName     String    @map("first_name")
+  lastName      String    @map("last_name")
+  email         String    @unique
+  passwordHash  String    @map("password_hash")
+  phone         String?
+  role          Role      @default(TEACHER)
+  status        Status    @default(ACTIVE)
+  profilePhoto  String?   @map("profile_photo")
+  lastLogin     DateTime? @map("last_login")
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+
+  // Relations
+  assignedClasses Class[]        @relation("AssignedTeacher")
+  hodClasses      Class[]        @relation("HODTeacher")
+  dailyReports    DailyReport[]
+  hodReviews      HODReview[]
+  adminReviews    AdminReview[]
+  auditLogs       AuditLog[]
+  fileUploads     FileUpload[]
+  notifications   Notification[]
+
+  @@map("users")
+}
+
+model Class {
+  id                String    @id @default(uuid())
+  name              ClassName
+  academicYear      String    @map("academic_year")
+  assignedTeacherId String?   @map("assigned_teacher_id")
+  hodId             String?   @map("hod_id")
+  status            Status    @default(ACTIVE)
+  createdAt         DateTime  @default(now()) @map("created_at")
+
+  // Relations
+  assignedTeacher User?         @relation("AssignedTeacher", fields: [assignedTeacherId], references: [id])
+  hod             User?         @relation("HODTeacher", fields: [hodId], references: [id])
+  children        Child[]
+  dailyReports    DailyReport[]
+
+  @@map("classes")
+}
+
+model Child {
+  id               String    @id @default(uuid())
+  admissionNumber  String    @unique @map("admission_number")
+  firstName        String    @map("first_name")
+  lastName         String    @map("last_name")
+  gender           String
+  dateOfBirth      DateTime  @map("date_of_birth")
+  photo            String?
+  parentName       String    @map("parent_name")
+  parentPhone      String    @map("parent_phone")
+  emergencyContact String    @map("emergency_contact")
+  medicalNotes     String?   @map("medical_notes")
+  allergies        String?
+  classId          String    @map("class_id")
+  enrollmentStatus Status    @default(ACTIVE) @map("enrollment_status")
+  createdAt        DateTime  @default(now()) @map("created_at")
+  updatedAt        DateTime  @updatedAt @map("updated_at")
+
+  // Relations
+  class        Class         @relation(fields: [classId], references: [id])
+  dailyReports DailyReport[]
+
+  @@map("children")
+}
+
+model DailyReport {
+  id                 String             @id @default(uuid())
+  childId            String             @map("child_id")
+  teacherId          String             @map("teacher_id")
+  classId            String             @map("class_id")
+  reportDate         DateTime           @map("report_date")
+  attendanceStatus   AttendanceStatus   @map("attendance_status")
+  mood               Mood
+  participationLevel ParticipationLevel @map("participation_level")
+  literacyScore      Int                @map("literacy_score")
+  numeracyScore      Int                @map("numeracy_score")
+  communicationScore Int                @map("communication_score")
+  motorSkillsScore   Int                @map("motor_skills_score")
+  socialSkillsScore  Int                @map("social_skills_score")
+  behaviorScore      Int                @map("behavior_score")
+  healthNotes        String?            @map("health_notes")
+  mealNotes          String?            @map("meal_notes")
+  napNotes           String?            @map("nap_notes")
+  teacherComment     String?            @map("teacher_comment")
+  attachmentUrl      String?            @map("attachment_url")
+  status             ReportStatus       @default(DRAFT)
+  createdAt          DateTime           @default(now()) @map("created_at")
+  updatedAt          DateTime           @updatedAt @map("updated_at")
+
+  // Relations
+  child        Child         @relation(fields: [childId], references: [id])
+  teacher      User          @relation(fields: [teacherId], references: [id])
+  class        Class         @relation(fields: [classId], references: [id])
+  hodReviews   HODReview[]
+  adminReviews AdminReview[]
+  fileUploads  FileUpload[]
+  notifications Notification[]
+
+  @@map("daily_reports")
+}
+
+model HODReview {
+  id           String       @id @default(uuid())
+  reportId     String       @map("report_id")
+  hodId        String       @map("hod_id")
+  reviewStatus ReviewStatus @map("review_status")
+  hodComment   String?      @map("hod_comment")
+  reviewedAt   DateTime     @default(now()) @map("reviewed_at")
+
+  // Relations
+  report DailyReport @relation(fields: [reportId], references: [id])
+  hod    User        @relation(fields: [hodId], references: [id])
+
+  @@map("hod_reviews")
+}
+
+model AdminReview {
+  id           String      @id @default(uuid())
+  reportId     String      @map("report_id")
+  adminId      String      @map("admin_id")
+  adminComment String?     @map("admin_comment")
+  finalStatus  FinalStatus @map("final_status")
+  reviewedAt   DateTime    @default(now()) @map("reviewed_at")
+
+  // Relations
+  report DailyReport @relation(fields: [reportId], references: [id])
+  admin  User        @relation(fields: [adminId], references: [id])
+
+  @@map("admin_reviews")
+}
+
+model Notification {
+  id        String      @id @default(uuid())
+  userId    String      @map("user_id")
+  reportId  String?     @map("report_id")
+  title     String
+  message   String
+  type      String
+  read      Boolean     @default(false)
+  createdAt DateTime    @default(now()) @map("created_at")
+
+  user   User        @relation(fields: [userId], references: [id])
+  report DailyReport? @relation(fields: [reportId], references: [id])
+
+  @@map("notifications")
+}
+
+model FileUpload {
+  id         String   @id @default(uuid())
+  reportId   String   @map("report_id")
+  fileUrl    String   @map("file_url")
+  fileType   String   @map("file_type")
+  uploadedBy String   @map("uploaded_by")
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  // Relations
+  report DailyReport @relation(fields: [reportId], references: [id])
+  user   User        @relation(fields: [uploadedBy], references: [id])
+
+  @@map("file_uploads")
+}
+
+model AuditLog {
+  id         String   @id @default(uuid())
+  userId     String   @map("user_id")
+  action     String
+  entityType String   @map("entity_type")
+  entityId   String   @map("entity_id")
+  oldValue   String?  @map("old_value")
+  newValue   String?  @map("new_value")
+  timestamp  DateTime @default(now())
+
+  // Relations
+  user User @relation(fields: [userId], references: [id])
+
+  @@map("audit_logs")
+}
