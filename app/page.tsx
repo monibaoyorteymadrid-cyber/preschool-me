@@ -23,7 +23,11 @@ export default async function Home() {
     }
   } catch (error) {
     console.error("Error checking admin:", error);
-    // If database error, still allow login attempt
+    const prismaErrorCode = (error as any)?.code;
+
+    if (prismaErrorCode === "P2021") {
+      redirect("/db-init");
+    }
   }
 
   redirect("/login");
