@@ -478,6 +478,51 @@
 			"label": "git-add-cleanup",
 			"type": "shell",
 			"command": "git add ."
+		},
+		{
+			"label": "git-commit-cleanup",
+			"type": "shell",
+			"command": "git commit -m 'Remove debugging logs after fixing database migration issue'"
+		},
+		{
+			"label": "git-push-cleanup",
+			"type": "shell",
+			"command": "git push"
+		},
+		{
+			"label": "git-add-db-push",
+			"type": "shell",
+			"command": "git add render.yaml"
+		},
+		{
+			"label": "git-commit-db-push",
+			"type": "shell",
+			"command": "git commit -m 'Change to prisma db push for more reliable database schema deployment'"
+		},
+		{
+			"label": "git-push-db-push",
+			"type": "shell",
+			"command": "git push"
+		},
+		{
+			"label": "git-add-service-name",
+			"type": "shell",
+			"command": "git add render.yaml"
+		},
+		{
+			"label": "git-commit-service-name",
+			"type": "shell",
+			"command": "git commit -m 'Fix service name and add prisma generate before db push'"
+		},
+		{
+			"label": "git-push-service-name",
+			"type": "shell",
+			"command": "git push"
+		},
+		{
+			"label": "git-add-db-script",
+			"type": "shell",
+			"command": "git add ."
 		}
 	]
 }
