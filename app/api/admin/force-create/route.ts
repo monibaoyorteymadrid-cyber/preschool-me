@@ -4,12 +4,20 @@ import { prisma } from "@/lib/prisma";
 
 export async function POST() {
   try {
+    console.log("Force create admin: Starting...");
+
+    // Test database connection first
+    await prisma.$connect();
+    console.log("Force create admin: Database connected");
+
     // Check if admin already exists
     const existingAdmin = await prisma.user.findFirst({
       where: {
         role: "ADMIN",
       },
     });
+
+    console.log("Force create admin: Existing admin check result:", existingAdmin ? "found" : "not found");
 
     if (existingAdmin) {
       return NextResponse.json({
@@ -22,6 +30,7 @@ export async function POST() {
     }
 
     // Force create admin user
+    console.log("Force create admin: Creating user...");
     const hashedPassword = await bcrypt.hash("admin123", 10);
 
     const newAdmin = await prisma.user.create({
@@ -47,6 +56,13 @@ export async function POST() {
     });
   } catch (error) {
     console.error("Force create admin error:", error);
-    return NextResponse.json({ error: "Failed to create admin" }, { status: 500 });
+    console.error("Error details:", JSON.stringify(error, null, 2));
+
+    // Return detailed error for debugging
+    return NextResponse.json({
+      error: "Failed to create admin",
+      details: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined
+    }, { status: 500 });
   }
 }

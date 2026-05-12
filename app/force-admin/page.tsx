@@ -28,8 +28,11 @@ export default function ForceCreateAdminPage() {
       }
     } catch (error) {
       console.error("Force create request failed:", error);
-      toast.error("Request failed");
-      setResult({ error: "Request failed" });
+      toast.error("Request failed - check console for details");
+      setResult({
+        error: "Request failed",
+        details: error instanceof Error ? error.message : String(error)
+      });
     } finally {
       setIsCreating(false);
     }
