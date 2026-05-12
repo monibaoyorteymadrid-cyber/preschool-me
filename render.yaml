@@ -12,7 +12,7 @@ services:
       - key: NODE_ENV
         value: production
       - key: NEXTAUTH_URL
-        value: https://preschool-me-web.onrender.com
+        value: https://preschool-me.onrender.com
       - key: NEXTAUTH_SECRET
         value: "f9e8d7c6b5a43210f9e8d7c6b5a43210f9e8d7c6b5a43210"
       - key: DATABASE_URL
