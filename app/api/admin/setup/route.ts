@@ -74,9 +74,8 @@ export async function POST(request: Request) {
 
     // Create custom admin
     const hashedPassword = await bcrypt.hash(password, 10);
-    console.log("Creating admin user with email:", email);
 
-    const newUser = await prisma.user.create({
+    await prisma.user.create({
       data: {
         firstName: "System",
         lastName: "Admin",
@@ -86,8 +85,6 @@ export async function POST(request: Request) {
         status: "ACTIVE",
       },
     });
-
-    console.log("Admin user created successfully:", newUser.id);
 
     // Create some default classes
     await prisma.class.createMany({

@@ -448,6 +448,36 @@
 			"label": "git-add-debug",
 			"type": "shell",
 			"command": "git add ."
+		},
+		{
+			"label": "git-commit-debug",
+			"type": "shell",
+			"command": "git commit -m 'Add debugging logs to troubleshoot login issues'"
+		},
+		{
+			"label": "git-push-debug",
+			"type": "shell",
+			"command": "git push"
+		},
+		{
+			"label": "git-add-migration",
+			"type": "shell",
+			"command": "git add render.yaml"
+		},
+		{
+			"label": "git-commit-migration",
+			"type": "shell",
+			"command": "git commit -m 'Add Prisma migration to build command to create database tables'"
+		},
+		{
+			"label": "git-push-migration",
+			"type": "shell",
+			"command": "git push"
+		},
+		{
+			"label": "git-add-cleanup",
+			"type": "shell",
+			"command": "git add ."
 		}
 	]
 }
