@@ -358,6 +358,31 @@
 			"type": "shell",
 			"command": "git remote add origin https://github.com/monibaoyorteymadrid-cyber/preschool-me.git; git branch -M main; git push -u origin main",
 			"isBackground": false
+		},
+		{
+			"label": "build",
+			"type": "shell",
+			"command": "prisma generate && next build"
+		},
+		{
+			"label": "generate",
+			"type": "shell",
+			"command": "npx prisma generate"
+		},
+		{
+			"label": "build",
+			"type": "shell",
+			"command": "npx next build"
+		},
+		{
+			"label": "next-build",
+			"type": "shell",
+			"command": "npx next build"
+		},
+		{
+			"label": "git-add",
+			"type": "shell",
+			"command": "git add ."
 		}
 	]
 }
