@@ -1,0 +1,28 @@
+services:
+  - type: web
+    name: preschool-me-web
+    env: node
+    plan: starter
+    branch: main
+    buildCommand: npm install && npm run build
+    startCommand: npm run start
+    root: .
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NEXTAUTH_URL
+        value: https://<your-service-name>.onrender.com
+      - key: NEXTAUTH_SECRET
+        value: "replace-with-a-strong-secret"
+      - key: DATABASE_URL
+        fromDatabase:
+          name: preschool-me-db
+          field: connectionString
+
+databases:
+  - name: preschool-me-db
+    plan: starter
+    region: oregon
+    databaseName: preschool_me
+    engine: postgres
