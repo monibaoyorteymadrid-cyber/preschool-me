@@ -383,6 +383,71 @@
 			"label": "git-add",
 			"type": "shell",
 			"command": "git add ."
+		},
+		{
+			"label": "git-commit",
+			"type": "shell",
+			"command": "git commit -m \"Add setup page and update admin setup API for custom admin creation\""
+		},
+		{
+			"label": "git-commit",
+			"type": "shell",
+			"command": "git commit -m 'Add setup page and update admin setup API for custom admin creation'"
+		},
+		{
+			"label": "git-commit",
+			"type": "shell",
+			"command": "git commit"
+		},
+		{
+			"label": "git-commit-simple",
+			"type": "shell",
+			"command": "git commit -m \"Add setup page\""
+		},
+		{
+			"label": "git-commit-single",
+			"type": "shell",
+			"command": "git commit -m 'Add setup page'"
+		},
+		{
+			"label": "git-push",
+			"type": "shell",
+			"command": "git push"
+		},
+		{
+			"label": "git-add-render",
+			"type": "shell",
+			"command": "git add render.yaml"
+		},
+		{
+			"label": "git-commit-render",
+			"type": "shell",
+			"command": "git commit -m 'Fix render.yaml with proper service URL and secret'"
+		},
+		{
+			"label": "git-push-render",
+			"type": "shell",
+			"command": "git push"
+		},
+		{
+			"label": "git-add-correct-url",
+			"type": "shell",
+			"command": "git add render.yaml"
+		},
+		{
+			"label": "git-commit-correct-url",
+			"type": "shell",
+			"command": "git commit -m 'Update render.yaml with correct service URL: preschool-me.onrender.com'"
+		},
+		{
+			"label": "git-push-correct-url",
+			"type": "shell",
+			"command": "git push"
+		},
+		{
+			"label": "git-add-debug",
+			"type": "shell",
+			"command": "git add ."
 		}
 	]
 }

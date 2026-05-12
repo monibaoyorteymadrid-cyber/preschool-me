@@ -34,20 +34,21 @@ export const authOptions: NextAuthOptions = {
         });
 
         if (!user) {
-          // console.log("User not found in database");
+          console.log("User not found in database for email:", credentials.email);
           throw new Error("Invalid credentials");
         }
 
-        // console.log("User found, checking password...");
+        console.log("User found, checking password for:", credentials.email);
 
         const isPasswordCorrect = await bcrypt.compare(
           credentials.password,
           user.passwordHash
         );
 
-        // console.log("Password correct:", isPasswordCorrect);
+        console.log("Password correct:", isPasswordCorrect);
 
         if (!isPasswordCorrect) {
+          console.log("Password incorrect for user:", credentials.email);
           throw new Error("Invalid credentials");
         }
 
