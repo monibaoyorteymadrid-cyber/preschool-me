@@ -523,6 +523,56 @@
 			"label": "git-add-db-script",
 			"type": "shell",
 			"command": "git add ."
+		},
+		{
+			"label": "git-commit-db-script",
+			"type": "shell",
+			"command": "git commit -m 'Add custom db:setup script for reliable database initialization'"
+		},
+		{
+			"label": "git-push-db-script",
+			"type": "shell",
+			"command": "git push"
+		},
+		{
+			"label": "git-add-render-url",
+			"type": "shell",
+			"command": "git add render.yaml"
+		},
+		{
+			"label": "git-commit-render-url",
+			"type": "shell",
+			"command": "git commit -m 'Set Render DATABASE_URL to actual connection string'"
+		},
+		{
+			"label": "git-push-render-url",
+			"type": "shell",
+			"command": "git push"
+		},
+		{
+			"label": "test-prisma-push",
+			"type": "shell",
+			"command": "npx prisma db push --schema=prisma/schema.prisma --accept-data-loss --force-reset --url \"postgresql://preschool_me_db_user:XrXu63afns7DdEidBbNh1j7VDOrEfD3D@dpg-d81mildckfvc739vo890-a/preschool_me_db\""
+		},
+		{
+			"label": "git-add-db-fallback",
+			"type": "shell",
+			"command": "git add app/page.tsx app/api/db/init/route.ts app/db-init/page.tsx"
+		},
+		{
+			"label": "git-commit-db-fallback",
+			"type": "shell",
+			"command": "git commit -m 'Add DB initialization fallback page and error redirect for missing users table'"
+		},
+		{
+			"label": "git-push-db-fallback",
+			"type": "shell",
+			"command": "git push"
+		},
+		{
+			"label": "git-add-debug-login",
+			"type": "shell",
+			"command": "git add ."
 		}
 	]
 }
