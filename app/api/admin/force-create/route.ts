@@ -2,37 +2,38 @@ import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
 
-export async function POST() {
+export async function POST(request: Request) {
   try {
-    console.log("Force create admin: Starting...");
+    console.log("[Force Admin] Starting...");
 
-    // Test database connection first
-    await prisma.$connect();
-    console.log("Force create admin: Database connected");
+    // Hash password
+    console.log("[Force Admin] Hashing password...");
+    const hashedPassword = await bcrypt.hash("admin123", 10);
+    console.log("[Force Admin] Password hashed");
 
-    // Check if admin already exists
+    // Check if admin exists
+    console.log("[Force Admin] Checking for existing admin...");
     const existingAdmin = await prisma.user.findFirst({
-      where: {
-        role: "ADMIN",
-      },
+      where: { role: "ADMIN" },
     });
 
-    console.log("Force create admin: Existing admin check result:", existingAdmin ? "found" : "not found");
-
     if (existingAdmin) {
+      console.log("[Force Admin] Admin exists:", existingAdmin.email);
       return NextResponse.json({
+        success: true,
         message: "Admin already exists",
-        admin: {
-          email: existingAdmin.email,
-          id: existingAdmin.id
-        }
+        admin: { email: existingAdmin.email, id: existingAdmin.id }
       });
     }
 
-    // Force create admin user
-    console.log("Force create admin: Creating user...");
-    const hashedPassword = await bcrypt.hash("admin123", 10);
+    // Clean up any duplicate email
+    console.log("[Force Admin] Cleaning up duplicates...");
+    await prisma.user.deleteMany({
+      where: { email: "admin@school.com" },
+    }).catch(() => null);
 
+    // Create admin
+    console.log("[Force Admin] Creating admin user...");
     const newAdmin = await prisma.user.create({
       data: {
         firstName: "System",
@@ -44,25 +45,17 @@ export async function POST() {
       },
     });
 
-    console.log("Force created admin user:", newAdmin.id);
-
+    console.log("[Force Admin] Success! Created:", newAdmin.id);
     return NextResponse.json({
-      message: "Admin user force created",
-      admin: {
-        email: "admin@school.com",
-        password: "admin123",
-        id: newAdmin.id
-      }
+      success: true,
+      message: "Admin created",
+      admin: { email: "admin@school.com", password: "admin123", id: newAdmin.id }
     });
   } catch (error) {
-    console.error("Force create admin error:", error);
-    console.error("Error details:", JSON.stringify(error, null, 2));
-
-    // Return detailed error for debugging
+    console.error("[Force Admin] Error:", error);
     return NextResponse.json({
-      error: "Failed to create admin",
-      details: error instanceof Error ? error.message : String(error),
-      stack: error instanceof Error ? error.stack : undefined
+      success: false,
+      error: error instanceof Error ? error.message : String(error)
     }, { status: 500 });
   }
 }
