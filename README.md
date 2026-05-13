@@ -70,8 +70,28 @@ Visit `http://localhost:3000/api/admin/setup` to create the initial admin user a
 
 ## Deployment
 
-The application is ready for deployment on **Vercel**.
+### Railway
 
-1. Connect your GitHub repository to Vercel.
-2. Add your environment variables in the Vercel project settings.
-3. Vercel will automatically detect Next.js and deploy the application.
+The application can be deployed on Railway with PostgreSQL.
+
+1. Create a new Railway project and connect your GitHub repository.
+2. Add environment variables in Railway project settings:
+   - `DATABASE_URL`
+   - `NEXTAUTH_URL`
+   - `NEXTAUTH_SECRET`
+3. Set the build command to:
+   ```bash
+   npm install && npm run build
+   ```
+4. Deploy the app.
+
+After deployment, run the database setup once:
+```bash
+railway run npm run db:setup
+```
+
+Then open `/setup` to create the first admin user.
+
+### Vercel
+
+The application also works on Vercel with an external PostgreSQL database, but Railway is recommended for an easier full-stack deployment experience.
